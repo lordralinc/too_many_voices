@@ -118,7 +118,7 @@ export default class RollSession {
       });
       delay -= 1;
       if (delay < 0) {
-        this.onEnd('endOfTime');
+        setTimeout(() => this.onEnd('endOfTime'), 1_000);
         clearInterval(interval);
       }
     }, 1_000);

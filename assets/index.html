@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>TMV Integration</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -21,7 +21,7 @@
         font-weight: 700;
         font-style: normal;
         font-size: large;
-        text-shadow: 1px gray;
+        text-shadow: 1px rgb(32, 32, 32);
         color: white;
       }
       body {
@@ -41,7 +41,7 @@
       .self-progress-value {
         background-color: rgb(33, 33, 134);
         border-radius: 7px;
-        transition: width 0.8s;
+        transition: width 0.98s;
         background-image: linear-gradient(
           45deg,
           rgba(255, 255, 255, 0.15) 25%,
@@ -59,6 +59,8 @@
   <body>
     <div id="root" class="d-none container-fluid"></div>
     <script>
+      var hideWindowTimeout = null;
+
       function applyElement(tag, fn, options) {
         const element = document.createElement(tag);
         fn(element);
@@ -77,6 +79,7 @@
         root.classList.add('d-none');
       }
       function renderItem(item) {
+        clearInterval(hideWindowTimeout);
         cleanContainer();
         const root = document.getElementById('root');
         root.classList.remove('d-none');
@@ -88,7 +91,7 @@
               el.appendChild(
                 applyElement('div', (row) => {}, {
                   id: 'container',
-                  style: 'margin-right: 5px; height: 300px',
+                  style: 'margin-right: 5px; height: 300px; width: 500px;',
                 }),
               );
 
@@ -106,7 +109,7 @@
                       ),
                     );
                   },
-                  { id: 'chat', style: 'height: 300px' },
+                  { id: 'chat', style: 'height: 300px; width: 300px;' },
                 ),
               );
             },
@@ -141,7 +144,7 @@
             applyElement(
               'p',
               (el) => {
-                el.textContent = `Напиши в чате команду !roll (сложность ${item.value.cubeCount}d${item.value.useCube} > ${item.value.value})`;
+                el.textContent = `Напиши в чате команду !roll (сложность ${item.value.value})`;
               },
               { class: 'text-center' },
             ),
@@ -193,7 +196,7 @@
               el.appendChild(
                 applyElement('span', (sp) => {
                   sp.id = 'cubes-progress-bar-counter';
-                  sp.textContent = `$0%`;
+                  sp.textContent = `0%`;
                 }),
               );
             }),
@@ -208,11 +211,11 @@
       }
 
       function renderTick(tickData) {
+        clearInterval(hideWindowTimeout);
         const pbValue = document.getElementById('progress-bar-value');
 
         if (pbValue === null) {
-          renderItem(tickData.session);
-          return renderTick(tickData);
+          return;
         }
 
         pbValue.style.width = `${calculateWidth(tickData.delay, tickData.session.delay, 300)}px`;
@@ -225,7 +228,7 @@
           );
           cubespbValue.style.width = `${calculateWidth(tickData.currentPercent, 100, 300)}px`;
           document.getElementById('cubes-progress-bar-counter').textContent =
-            `${tickData.currentPercent}%`;
+            `${tickData.currentPercent || 0}%`;
         }
       }
 
@@ -273,11 +276,11 @@
           root.appendChild(
             applyElement('h5', (el) => {
               el.classList.add('text-center');
-              el.textContent = `Только ${data.winPercent}% из вас бросило больше чем ${data.session.value.value}`;
+              el.textContent = `Только ${data.winPercent || 0}% из вас бросило больше чем ${data.session.value.value}`;
             }),
           );
         }
-        setTimeout(cleanContainer, 10_000);
+        hideWindowTimeout = setTimeout(cleanContainer, 10_000);
       }
 
       function applyCongratulations(data) {
@@ -309,7 +312,7 @@
           );
         }
 
-        setTimeout(cleanContainer, 10_000);
+        hideWindowTimeout = setTimeout(cleanContainer, 10_000);
       }
 
       let connectInterval = null;
@@ -319,7 +322,6 @@
         const wsConnection = new WebSocket('ws://localhost:3000/ws');
         wsConnection.binaryType = 'arraybuffer';
         wsConnection.onclose = function (event) {
-          cleanContainer();
           if (event.wasClean) {
             console.warn('Соединение закрыто чисто');
           } else {

@@ -13,11 +13,23 @@ const webSocketServer = new WebSocketServer({ server, path: '/ws' });
 const port = 3000;
 
 app.get('/', (req, res) => {
-  res.send(
-    fs
-      .readFileSync(path.resolve(__dirname, '../../assets/', 'index.html'))
-      .toString(),
-  );
+  const selectFile = () => {
+    const files = [
+      path.resolve(__dirname, '../../assets/', 'index.html'),
+      path.resolve(__dirname, 'resources/assets/', 'index.html'),
+      path.resolve('resources/assets/', 'index.html'),
+    ];
+
+    for (let index = 0; index < files.length; index += 1) {
+      const element = files[index];
+      if (fs.existsSync(element)) {
+        return element;
+      }
+    }
+    throw Error(`Could not find`);
+  };
+
+  res.send(fs.readFileSync(selectFile()).toString());
 });
 
 const wssConnections: ws[] = [];
