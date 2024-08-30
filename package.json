@@ -174,7 +174,7 @@
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "productName": "Too Many Voices",
+    "productName": "TooManyVoices",
     "appId": "ru.lordralinc.TooManyVoices",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
