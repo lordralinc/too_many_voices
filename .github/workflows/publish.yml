@@ -7,6 +7,7 @@ on:
 
 jobs:
   publish:
+    permissions: write-all
     if: ${{ github.repository_owner == 'lordralinc' }}
 
     runs-on: ${{ matrix.os }}
