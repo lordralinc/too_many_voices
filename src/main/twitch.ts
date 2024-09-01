@@ -9,7 +9,7 @@ import {
 } from './twitch/types';
 import RollSession from './roll-session';
 import { SettingsCubesType } from '../renderer/types';
-import { getRandomInt } from '../renderer/utils';
+import { getRandomInt } from '../shared/utils';
 import { Logger } from './util';
 import ipc, { IPCChannels } from './ipc';
 

@@ -1,0 +1,38 @@
+* {
+  font-family: 'Kanit', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: large;
+  text-shadow: 1px rgb(32, 32, 32);
+  color: white;
+}
+body {
+  background-color: black;
+}
+
+.self-progress {
+  display: flex;
+  width: 300px;
+  border-radius: 7px;
+  height: 20px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  background-color: rgb(234, 234, 234);
+  border-radius: 7px;
+  margin: 5px;
+}
+.self-progress-value {
+  background-color: rgb(33, 33, 134);
+  border-radius: 7px;
+  transition: width 0.98s;
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 20px 20px;
+}

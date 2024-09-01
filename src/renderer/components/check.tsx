@@ -14,9 +14,9 @@ import {
   setEnd,
   setRun,
   setTick,
-} from '../store/slices/check-slice';
+} from '../../shared/store/slices/check-slice';
 import { CheckDifficultyToName, SettingsCubesType } from '../types';
-import { getPlural } from '../utils';
+import { getPlural } from '../../shared/utils';
 
 export function NumberSessionInfo({
   value,

@@ -10,3 +10,13 @@ export default function makeId(length: number) {
   }
   return result;
 }
+
+export function calculateWidth(
+  currentValue: number,
+  maxValue: number,
+  maxPX: number,
+): number {
+  const onePercentPX = maxPX / 100;
+  const onePercentValue = maxValue / 100;
+  return (currentValue / onePercentValue) * onePercentPX;
+}

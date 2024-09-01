@@ -1,6 +1,6 @@
 import { Settings } from './types';
 
-const DEFAULT_SETTINGS: Settings = {
+export const DEFAULT_SETTINGS: Settings = {
   number: {
     easy2: { delay: 10, value: 10 },
     easy: { delay: 10, value: 50 },
@@ -38,16 +38,4 @@ export function loadSettings(): Settings {
   }
   localStorage.setItem('settings', JSON.stringify(DEFAULT_SETTINGS));
   return DEFAULT_SETTINGS;
-}
-
-export function getRandomInt(min: number, max: number): number {
-  return Math.round(Math.random() * (max - min) + min);
-}
-
-export function getPlural(count: number, words: string[]): string {
-  const cases = [2, 0, 1, 1, 1, 2];
-
-  return words[
-    count % 100 > 4 && count % 100 < 20 ? 2 : cases[Math.min(count % 10, 5)]
-  ];
 }

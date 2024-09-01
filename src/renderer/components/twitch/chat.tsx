@@ -4,7 +4,7 @@ import { selectChatMessages } from '../../store/selectors';
 import {
   addNaturalMessage,
   addGeneratedMessage,
-} from '../../store/slices/messages-slice';
+} from '../../../shared/store/slices/messages-slice';
 import { IPCTwitchMessageEvent } from '../../../main/ipc';
 
 export default function TwitchChatComponent() {

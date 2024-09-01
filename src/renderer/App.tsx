@@ -1,6 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle';
-import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import './index.css';
 import React from 'react';
 import {
@@ -10,7 +7,7 @@ import {
   CheckType,
   SettingsCubesType,
 } from './types';
-import { getRandomInt } from './utils';
+import { getRandomInt } from '../shared/utils';
 import VariablesPicker from './components/variables-picker';
 import SettingsComponent from './components/settings/settings';
 import { selectAuthorization, selectSettings } from './store/selectors';

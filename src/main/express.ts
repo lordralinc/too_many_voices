@@ -11,30 +11,18 @@ const app = express();
 const server = http.createServer(app);
 const webSocketServer = new WebSocketServer({ server, path: '/ws' });
 const port = 3000;
+app.use(express.static(path.resolve('resources/assets/integration')));
 
 app.get('/', (req, res) => {
   if (process.env.NODE_ENV !== 'production') {
     res.redirect('http://localhost:1213/');
     return;
   }
-
-  const selectFile = () => {
-    const files = [
-      path.resolve(__dirname, '../../assets/', 'index.html'),
-      path.resolve(__dirname, 'resources/assets/', 'index.html'),
-      path.resolve('resources/assets/', 'index.html'),
-    ];
-
-    for (let index = 0; index < files.length; index += 1) {
-      const element = files[index];
-      if (fs.existsSync(element)) {
-        return element;
-      }
-    }
-    throw Error(`Could not find`);
-  };
-
-  res.send(fs.readFileSync(selectFile()).toString());
+  res.send(
+    fs
+      .readFileSync(path.resolve('resources/assets/integration', 'index.html'))
+      .toString(),
+  );
 });
 
 const wssConnections: ws[] = [];

@@ -36,6 +36,10 @@ export const ckeckSlice = createSlice({
   name: 'check',
   initialState,
   reducers: {
+    setNone(state) {
+      state.type = 'none';
+      state.data = undefined;
+    },
     setRun(state, action: PayloadAction<IPCCheckRunEvent>) {
       state.type = 'run';
       state.data = action.payload;
@@ -62,7 +66,7 @@ export const ckeckSlice = createSlice({
   },
 });
 
-export const { setRun, setTick, setEnd, setCongratulations, setDisappiriens } =
+export const { setNone, setRun, setTick, setEnd, setCongratulations, setDisappiriens } =
   ckeckSlice.actions;
 
 export default ckeckSlice.reducer;
