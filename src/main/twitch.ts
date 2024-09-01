@@ -86,21 +86,41 @@ export async function subscribeToChat() {
         authData.user_id,
         authData.user_id,
       );
+      apiClient.sendChatMessage(
+        'TMV подключен к чату. GL HF',
+        authData.user_id,
+        authData.user_id,
+      );
+      ipc.emit(IPCChannels.TwitchSessionWelcome, { nickname: authData.login });
+    }
+
+    if (event.metadata.message_type === 'session_keepalive') {
+      ipc.emit(IPCChannels.TwitchSessionKeepAlive, {
+        nickname: authData.login,
+      });
     }
 
     if (event.metadata.subscription_type === 'channel.chat.message') {
       const message =
         event as TwitchWebsocketEvent<TwitchWebsocketEventMessage>;
-
+      ipc.emit(IPCChannels.TwitchMessageWithoutInfo, {
+        nickname: message.payload.event.chatter_user_name,
+        value: message.payload.event.message.text,
+        color: message.payload.event.color,
+        id: message.payload.event.message_id,
+      });
       if (currentSession) {
         const session = currentSession as RollSession;
         if (session.initSession.checkType === 'number') {
           try {
             const value = parseInt(message.payload.event.message.text, 10);
             if (value > 1 && value <= (session.initSession.value as number)) {
+              // @ts-ignore
               ipc.emit(IPCChannels.TwitchMessage, {
                 nickname: message.payload.event.chatter_user_name,
                 value,
+                color: message.payload.event.color,
+                id: message.payload.event.message_id,
               });
               ipc.emit(IPCChannels.CheckValue, {
                 nickname: message.payload.event.chatter_user_name,
@@ -133,6 +153,8 @@ export async function subscribeToChat() {
             ipc.emit(IPCChannels.TwitchMessage, {
               nickname: message.payload.event.chatter_user_name,
               value: `${v.cubeCount}d${v.useCube} [${values.join(', ')}] = ${values.reduce((p, c) => p + c)}`,
+              color: message.payload.event.color,
+              id: message.payload.event.message_id,
             });
             ipc.emit(IPCChannels.CheckStore, {
               nickname: message.payload.event.chatter_user_name,

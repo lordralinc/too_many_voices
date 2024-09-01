@@ -1,6 +1,7 @@
 import { RunSessionRequest } from './types';
 import ipc, { IPCChannels } from './ipc';
 import { SettingsCubesType } from '../renderer/types';
+import { Logger } from './util';
 
 export default class RollSession {
   initSession: RunSessionRequest;
@@ -42,6 +43,7 @@ export default class RollSession {
     reason: 'endOfTime' | 'success',
     successNickname: string | undefined = undefined,
   ) {
+    Logger.debug('onEnd', reason, successNickname);
     ipc.emit(IPCChannels.CheckEnd, {
       session: this.initSession,
       data: this.dataContent,

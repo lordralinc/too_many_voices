@@ -1,0 +1,19 @@
+.info-row-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+
+}
+.info-row {
+
+}
+.info-row > strong {
+  margin-right: 5px;
+}
+
+.visual-block {
+  box-shadow: 0 5px 24px rgba(27,0,0,.2);
+  padding: 17px 20px 25px;
+  border-radius: 16px;
+  margin: 5px 0;
+}

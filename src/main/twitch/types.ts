@@ -45,11 +45,13 @@ export interface TwitchWebsocketEvent<Payload = any> {
 
 export interface TwitchWebsocketEventMessage {
   event: {
+    message_id: string;
     broadcaster_user_id: string;
     broadcaster_user_login: string;
     broadcaster_user_name: string;
     chatter_user_login: string;
     chatter_user_name: string;
     message: { text: string };
+    color: string;
   };
 }

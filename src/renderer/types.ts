@@ -33,3 +33,10 @@ export type SettingsDItem = { [key in CheckDifficulty]: SettingsTDItem };
 export type Settings = {
   [key in CheckType]: SettingsDItem;
 };
+
+export interface TwitchAuthorizationInfo {
+  authorized: boolean;
+  sessionWelcome: boolean;
+  keepAlive: boolean;
+  nickname: string;
+}

@@ -13,6 +13,11 @@ const webSocketServer = new WebSocketServer({ server, path: '/ws' });
 const port = 3000;
 
 app.get('/', (req, res) => {
+  if (process.env.NODE_ENV !== 'production') {
+    res.redirect('http://localhost:1213/');
+    return;
+  }
+
   const selectFile = () => {
     const files = [
       path.resolve(__dirname, '../../assets/', 'index.html'),

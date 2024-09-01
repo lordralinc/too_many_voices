@@ -156,6 +156,10 @@ ipc.on(IPCChannels.TwitchSetToken, () => {
   subscribeToChat();
 });
 
+ipc.onAll((channel, data) => {
+  mainWindow?.webContents.send(channel, data);
+});
+
 app
   .whenReady()
   .then(() => {

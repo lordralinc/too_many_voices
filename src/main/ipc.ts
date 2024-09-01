@@ -15,8 +15,11 @@ export const IPCChannels = {
   CheckCongratulations: 'check:congratulations',
   CheckDisappiriens: 'check:disappiriens',
   TwitchMessage: 'twitch:message',
+  TwitchMessageWithoutInfo: 'twitch:message-without-info',
   TwitchAuthorizeRequest: 'twitch:authorize-request',
   TwitchSetToken: 'twitch:set-token',
+  TwitchSessionWelcome: 'twitch:session-welcome',
+  TwitchSessionKeepAlive: 'twitch:session-keep-alive',
 } as const;
 export type IPCKey = (typeof IPCChannels)[keyof typeof IPCChannels];
 
@@ -65,8 +68,17 @@ export interface IPCCheckDisappiriensEvent {
   winPercent?: number;
 }
 export interface IPCTwitchMessageEvent {
+  id: string;
   nickname: string;
   value: string;
+  color: string;
+}
+
+export interface IPCTwitchSessionWelcomeEvent {
+  nickname: string;
+}
+export interface IPCTwitchSessionKeepAliveEvent {
+  nickname: string;
 }
 
 export type IPCCallback<T = undefined> = (data: T) => void;
@@ -74,6 +86,7 @@ export type IPCOnResponse = () => void;
 
 class IPC {
   // region LISTENERS
+  // @ts-ignore
   on(
     channel: 'check:run',
     callback: IPCCallback<IPCCheckRunEvent>,
@@ -117,10 +130,17 @@ class IPC {
   on(channel: 'twitch:set-token', callback: IPCCallback): IPCOnResponse;
 
   on(channel: 'twitch:authorize-request', callback: IPCCallback): IPCOnResponse;
+  on(
+    channel: 'twitch:session-welcome',
+    callback: IPCCallback<IPCTwitchSessionWelcomeEvent>,
+  ): IPCOnResponse;
+  on(
+    channel: 'twitch:session-keep-alive',
+    callback: IPCCallback<IPCTwitchSessionKeepAliveEvent>,
+  ): IPCOnResponse;
 
   on(channel: IPCKey, callback: IPCCallback<unknown>): IPCOnResponse {
     const listener = (...args: unknown[]) => {
-      Logger.debug('IPC', 'New event', channel, ...args);
       if (args.length === 1) {
         callback(args[0]);
       } else {
@@ -134,15 +154,26 @@ class IPC {
   }
 
   onAll(callback: (channel: IPCKey, data: unknown) => void): IPCOnResponse {
-    const offItems = Object.keys(IPCChannels).map((key) =>
-      this.on(IPCChannels[key], (data) => callback(IPCChannels[key], data)),
-    );
+    const offItems = Object.keys(IPCChannels).map((key) => {
+      // @ts-ignore
+      return this.on(IPCChannels[key], (data) => {
+        // @ts-ignore
+        return callback(IPCChannels[key], data);
+      });
+    });
     return () => {
       offItems.forEach((off) => off());
     };
   }
   // endregion LISTENERS
-
+  emit(
+    channel: 'twitch:session-welcome',
+    data: IPCTwitchSessionWelcomeEvent,
+  ): void;
+  emit(
+    channel: 'twitch:session-keep-alive',
+    data: IPCTwitchSessionKeepAliveEvent,
+  ): void;
   emit(channel: 'check:run', data: IPCCheckRunEvent): void;
 
   emit(channel: 'check:tick', data: IPCCheckTickEvent): void;
@@ -161,6 +192,10 @@ class IPC {
   emit(channel: 'check:disappiriens', data: IPCCheckDisappiriensEvent): void;
 
   emit(channel: 'twitch:message', data: IPCTwitchMessageEvent): void;
+  emit(
+    channel: 'twitch:message-without-info',
+    data: IPCTwitchMessageEvent,
+  ): void;
 
   emit(channel: 'twitch:set-token', data: undefined): void;
 
